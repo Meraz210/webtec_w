@@ -1,5 +1,4 @@
 <?php
-// index.php
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +84,6 @@
     </div>
 
     <script>
-        // Simple animation for the offer cards on hover
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.offer-card');
             cards.forEach(card => {

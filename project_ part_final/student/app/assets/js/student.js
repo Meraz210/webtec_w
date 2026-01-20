@@ -30,13 +30,13 @@ function showSection(sectionId, event) {
     }
 }
 
-// Also add a default active state when page loads
+
 window.addEventListener('DOMContentLoaded', function() {
-    // Check for hash in URL to show specific section
+    
     const hash = window.location.hash.substring(1);
     if (hash && document.getElementById(hash)) {
         showSection(hash);
-        // Find and highlight corresponding menu item
+        
         const menuLinks = document.querySelectorAll('.menu li a');
         menuLinks.forEach(link => {
             if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(hash)) {
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         });
     } else {
-        // Set the first menu item as active by default if no hash
+        
         const firstMenuItem = document.querySelector('.menu li');
         if (firstMenuItem && !document.querySelector('.menu li.active')) {
             firstMenuItem.classList.add('active');

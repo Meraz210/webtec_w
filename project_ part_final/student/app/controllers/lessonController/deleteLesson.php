@@ -3,13 +3,11 @@ session_start();
 require_once '../../../models/courseModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if user is logged in and is an instructor
+    
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'instructor') {
         echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
         exit();
     }
-
-    // Get lesson ID
     $lesson_id = $_POST['id'] ?? '';
 
     if (empty($lesson_id)) {
@@ -17,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Check if the lesson belongs to a course owned by the instructor
+    
     $instructorId = $_SESSION['user_id'];
     $courses = getCoursesByInstructor($instructorId);
     $validLesson = false;
@@ -27,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($courseLessons as $lesson) {
             if ($lesson['id'] == $lesson_id) {
                 $validLesson = true;
-                break 2; // Break out of both loops
+                break 2; 
             }
         }
     }
@@ -37,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Delete lesson from database
+    
     $result = deleteLesson($lesson_id);
 
     if ($result) {

@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ../views/admin/dashboard.php?error=user_not_found");
         exit;
     } elseif ($result) {
-        // If current user is updating their own profile, update session data
         if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $user['id']) {
             $updatedUser = getUserById($user['id']);
             if ($updatedUser) {

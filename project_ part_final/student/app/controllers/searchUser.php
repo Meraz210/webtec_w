@@ -1,6 +1,6 @@
 <?php
 require_once('../models/userModel.php');
-// Prevent PHP notices / warnings from corrupting JSON response
+
 ini_set('display_errors', 0);
 error_reporting(0);
 ob_start();

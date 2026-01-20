@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $courseImage = $_FILES['course_image'] ?? null;
 
     if ($title === '' || $difficulty === '' || $duration === '') {
-        // Check if it's from admin or instructor
         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
             header("Location: ../../views/admin/dashboard.php?error=empty_course_fields");
         } else {
@@ -22,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Handle course image upload
     $courseImageName = 'default.png';
     
     if ($courseImage && isset($courseImage['name']) && $courseImage['name'] !== '' && $courseImage['error'] === 0) {
@@ -30,18 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         
         if (in_array($ext, $allowed)) {
-            // Check file size (max 2MB)
             if ($courseImage['size'] <= 2 * 1024 * 1024) {
                 $courseImageName = 'course_' . uniqid() . '.' . $ext;
                 $uploadPath = "../../assets/images/courses/" . $courseImageName;
                 
-                // Create directory if it doesn't exist
                 if (!is_dir("../../assets/images/courses/")) {
                     mkdir("../../assets/images/courses/", 0777, true);
                 }
                 
                 if (!move_uploaded_file($courseImage['tmp_name'], $uploadPath)) {
-                    $courseImageName = 'default.png'; // Fallback to default on upload failure
+                    $courseImageName = 'default.png';
                     error_log("Failed to upload course image");
                 }
             }
@@ -59,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'course_image' => $courseImageName,
     ];
 
-    // Set instructor_id automatically for instructors
     if (isset($_SESSION['role']) && $_SESSION['role'] === 'instructor') {
         $course['instructor_id'] = $_SESSION['user_id'];
     }
@@ -67,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = addCourse($course);
 
     if ($result) {
-        // Redirect based on user role
         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
             header("Location: ../../views/admin/dashboard.php?success=course_added");
         } else {

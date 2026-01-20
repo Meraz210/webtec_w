@@ -3,7 +3,7 @@ session_start();
 require_once '../../models/courseModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if user is logged in
+    
     if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'instructor'])) {
         header("Location: ../../views/auth/login.php?error=unauthorized_access");
         exit;
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // If the user is an instructor, check if they own the course
+    
     if ($_SESSION['role'] === 'instructor') {
         $course = getCourseById($id);
         if (!$course || $course['instructor_id'] != $_SESSION['user_id']) {

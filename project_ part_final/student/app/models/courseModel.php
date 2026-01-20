@@ -140,13 +140,11 @@ function enrollInCourse($userId, $courseId) {
     $userId = (int)$userId;
     $courseId = (int)$courseId;
     
-    // Check if connection is valid
     if (!$con) {
         error_log("Database connection failed in enrollInCourse");
         return false;
     }
     
-    // Check if user is already enrolled
     $checkSql = "SELECT id FROM enrollments WHERE user_id = $userId AND course_id = $courseId";
     $checkResult = mysqli_query($con, $checkSql);
     
@@ -163,7 +161,6 @@ function enrollInCourse($userId, $courseId) {
     mysqli_autocommit($con, FALSE); // Disable autocommit
     
     try {
-        // Insert enrollment record
         $sql = "INSERT INTO enrollments (user_id, course_id, payment_status) VALUES ($userId, $courseId, 'free')";
         $result = mysqli_query($con, $sql);
         
@@ -171,7 +168,6 @@ function enrollInCourse($userId, $courseId) {
             throw new Exception("Enrollment insert failed: " . mysqli_error($con));
         }
         
-        // Insert initial progress record
         $progressSql = "INSERT INTO progress (user_id, course_id, completed_percentage) VALUES ($userId, $courseId, 0)";
         $progressResult = mysqli_query($con, $progressSql);
         
@@ -184,8 +180,8 @@ function enrollInCourse($userId, $courseId) {
         return true;
         
     } catch (Exception $e) {
-        mysqli_rollback($con); // Rollback the transaction
-        mysqli_autocommit($con, TRUE); // Re-enable autocommit
+        mysqli_rollback($con);
+        mysqli_autocommit($con, TRUE);
         error_log("Enrollment transaction failed: " . $e->getMessage());
         return false;
     }
@@ -248,15 +244,12 @@ function searchCourse($query) {
     $q = trim($query);
     if ($q === '') return false;
 
-    // Escape the query string for security
     $q = mysqli_real_escape_string($con, $q);
     
-    // If user typed a numeric id, search by id
     if (ctype_digit($q)) {
         $id = (int)$q;
         $sql = "SELECT * FROM courses WHERE id = $id LIMIT 1";
     } else {
-        // Use LIKE for title to allow partial matches
         $sql = "SELECT * FROM courses WHERE title LIKE '%$q%' LIMIT 1";
     }
 
@@ -409,7 +402,6 @@ function issueCertificate($userId, $courseId) {
     $courseId = (int)$courseId;
     $issueDate = date('Y-m-d');
     
-    // Check if certificate already exists
     $checkSql = "SELECT id FROM certificates WHERE user_id = $userId AND course_id = $courseId";
     $checkResult = mysqli_query($con, $checkSql);
     

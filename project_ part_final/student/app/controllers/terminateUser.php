@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // Prevent admin from deleting themselves
+
     if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $userId) {
         header("Location: ../views/admin/dashboard.php?error=cannot_delete_self");
         exit;

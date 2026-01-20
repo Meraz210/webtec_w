@@ -3,7 +3,7 @@ session_start();
 require_once '../models/courseModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if user is logged in and is an instructor
+    
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'instructor') {
         echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
         exit();
@@ -17,16 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Get all courses for this instructor
+    
     $courses = getCoursesByInstructor($instructorId);
 
-    // Find the course that matches the query (by ID or title)
+    
     $foundCourse = null;
     foreach ($courses as $course) {
         if ($course['id'] == $query || stripos($course['title'], $query) !== false) {
             $foundCourse = $course;
             
-            // Get category name for the course
+            
             $categories = getCategories();
             foreach ($categories as $category) {
                 if ($category['id'] == $course['category_id']) {

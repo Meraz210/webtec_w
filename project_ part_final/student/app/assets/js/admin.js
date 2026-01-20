@@ -89,16 +89,13 @@ function logoutAdmin() {
     }
 }
 
-// Initialize on page load
 window.addEventListener('DOMContentLoaded', function() {
     hideAllSections();
     showSection("dashboard");
 });
 
-// Wait for DOM to load before attaching event listeners
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Update User Search
     const searchBtn = document.getElementById("searchBtn");
     if (searchBtn) {
         searchBtn.addEventListener("click", function () {
@@ -151,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Terminate User Search
     const searchTerminateBtn = document.getElementById("searchTerminateBtn");
     if (searchTerminateBtn) {
         searchTerminateBtn.addEventListener("click", function () {
@@ -199,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Course Search for Update
     const searchCourseBtn = document.getElementById("searchCourseBtn");
     if (searchCourseBtn) {
         searchCourseBtn.addEventListener("click", function () {
@@ -250,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Course Search for Delete
     const searchCourseDeleteBtn = document.getElementById("searchCourseDeleteBtn");
     if (searchCourseDeleteBtn) {
         searchCourseDeleteBtn.addEventListener("click", function () {

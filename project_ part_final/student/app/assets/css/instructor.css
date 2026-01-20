@@ -14,7 +14,7 @@ body {
 }
 
 .button {
-  background: #0ea5a4;
+  background: #091a1a;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -26,7 +26,7 @@ body {
 
 .btn-container {
 display: flex;
-flex-direction: row; /* default */
+flex-direction: row;
 gap: 10px;
 }
 

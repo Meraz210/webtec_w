@@ -12,11 +12,9 @@
         if ($result && mysqli_num_rows($result) == 1) {
             $userData = mysqli_fetch_assoc($result);
             
-            // Check if password is hashed or plain text
             if (password_verify($password, $userData['password'])) {
                 return $userData;
             } else {
-                // For backward compatibility, check plain text
                 if ($userData['password'] === $password) {
                     return $userData;
                 }
@@ -56,7 +54,6 @@
         $password  = $user['password'];
         $role      = $user['role'];
 
-        // 🔍 Check if user already exists
         $check = $con->prepare("SELECT id FROM users WHERE email = ?");
         $check->bind_param("s", $email);
         $check->execute();
@@ -66,7 +63,6 @@
             return "EMAIL_EXISTS";
         }
 
-        // 🖼️ Avatar upload (optional)
         $avatar = "default.png";
 
         if ($file && isset($file['avatar']) && $file['avatar']['name'] !== "") {
@@ -84,10 +80,8 @@
             }
         }
 
-        // Hash the password for security
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
-        // ✅ Insert new user with hashed password
         $stmt = $con->prepare(
             "INSERT INTO users (full_name, email, password, role, avatar) 
             VALUES (?, ?, ?, ?, ?)"
@@ -108,7 +102,6 @@
         $role = $user['role'] ?? 'student';
         $file = $user['avatar'] ?? null;
 
-        // Check user exists
         $check = $con->prepare("SELECT id, avatar FROM users WHERE id = ?");
         $check->bind_param("i", $id);
         $check->execute();
@@ -164,13 +157,11 @@
         $q = trim($query);
         if ($q === '') return false;
 
-        // If user typed a numeric id, search by id
         if (ctype_digit($q)) {
             $id = (int)$q;
             $stmt = $con->prepare("SELECT id, full_name, email, role, avatar FROM users WHERE id = ? LIMIT 1");
             $stmt->bind_param("i", $id);
         } else {
-            // Use LIKE for both email and full_name to allow partial matches
             $like = "%" . $q . "%";
             $stmt = $con->prepare("SELECT id, full_name, email, role, avatar FROM users WHERE email LIKE ? OR full_name LIKE ? LIMIT 1");
             $stmt->bind_param("ss", $like, $like);
@@ -195,7 +186,6 @@
         $con = getConnection();
         $id = intval($id);
         
-        // Check if user exists
         $check = $con->prepare("SELECT id, avatar FROM users WHERE id = ?");
         $check->bind_param("i", $id);
         $check->execute();
@@ -208,12 +198,10 @@
         $row = $result->fetch_assoc();
         $avatar = $row['avatar'];
         
-        // Delete user from database
         $stmt = $con->prepare("DELETE FROM users WHERE id = ?");
         $stmt->bind_param("i", $id);
         $success = $stmt->execute();
         
-        // Delete avatar file if not default
         if ($success && $avatar !== "default.png") {
             $avatarPath = "../../assets/uploads/users/avatars/" . $avatar;
             if (file_exists($avatarPath)) {
@@ -251,12 +239,10 @@
     function updateUserInfo($id, $full_name, $email, $phone = null, $bio = null) {
         $con = getConnection();
         
-        // Build dynamic query based on available columns
         $sql = "UPDATE users SET full_name = ?, email = ?";
         $params = [$full_name, $email];
         $types = "ss";
         
-        // Check if phone column exists
         $phoneColumnExists = checkColumnExists($con, 'users', 'phone');
         if ($phoneColumnExists && $phone !== null) {
             $sql .= ", phone = ?";
@@ -264,7 +250,6 @@
             $types .= "s";
         }
         
-        // Check if bio column exists
         $bioColumnExists = checkColumnExists($con, 'users', 'bio');
         if ($bioColumnExists && $bio !== null) {
             $sql .= ", bio = ?";
